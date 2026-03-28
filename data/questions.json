@@ -1,0 +1,201 @@
+{
+  "categories": {
+    "Mathematics": [
+      {
+        "id": 1,
+        "question": "What is 7 × 8?",
+        "options": ["54", "56", "58", "64"],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 2,
+        "question": "What is the square root of 144?",
+        "options": ["10", "11", "12", "13"],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 3,
+        "question": "What is 15% of 200?",
+        "options": ["25", "30", "35", "40"],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 4,
+        "question": "What is the value of π (pi) rounded to two decimal places?",
+        "options": ["3.12", "3.14", "3.16", "3.18"],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 5,
+        "question": "If x + 5 = 12, what is x?",
+        "options": ["5", "6", "7", "8"],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 6,
+        "question": "What is 2³ (2 to the power of 3)?",
+        "options": ["6", "8", "9", "12"],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 7,
+        "question": "What is the area of a circle with radius 5? (Use π ≈ 3.14)",
+        "options": ["78.5", "31.4", "15.7", "62.8"],
+        "correct": 0,
+        "difficulty": "hard",
+        "points": 20
+      }
+    ],
+    "ICT": [
+      {
+        "id": 1,
+        "question": "What does HTML stand for?",
+        "options": [
+          "Hyper Text Markup Language",
+          "High Tech Modern Language",
+          "Home Tool Markup Language",
+          "Hyperlinks and Text Markup Language"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 2,
+        "question": "Which programming language is known for data science and AI?",
+        "options": ["Java", "Python", "C++", "Ruby"],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 3,
+        "question": "What does CPU stand for?",
+        "options": [
+          "Central Processing Unit",
+          "Computer Personal Unit",
+          "Central Processor Use",
+          "Computer Processing Unit"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 4,
+        "question": "What is the binary representation of the decimal number 10?",
+        "options": ["1010", "1100", "1001", "1110"],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 5,
+        "question": "Which data structure uses LIFO (Last In First Out)?",
+        "options": ["Queue", "Stack", "Array", "Linked List"],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 6,
+        "question": "What does SQL stand for?",
+        "options": [
+          "Structured Query Language",
+          "Simple Question Language",
+          "Sequential Query Language",
+          "Standard Question Language"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 7,
+        "question": "What is the time complexity of binary search?",
+        "options": ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+        "correct": 1,
+        "difficulty": "hard",
+        "points": 20
+      }
+    ],
+    "General Knowledge": [
+      {
+        "id": 1,
+        "question": "What is the capital of France?",
+        "options": ["London", "Berlin", "Paris", "Madrid"],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 2,
+        "question": "Which planet is known as the Red Planet?",
+        "options": ["Venus", "Mars", "Jupiter", "Saturn"],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 3,
+        "question": "How many continents are there?",
+        "options": ["5", "6", "7", "8"],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 4,
+        "question": "What is the largest ocean on Earth?",
+        "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+        "correct": 3,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 5,
+        "question": "Who painted the Mona Lisa?",
+        "options": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 6,
+        "question": "What is the smallest country in the world?",
+        "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 7,
+        "question": "In what year did World War II end?",
+        "options": ["1943", "1944", "1945", "1946"],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 8,
+        "question": "What is the longest river in the world?",
+        "options": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+        "correct": 1,
+        "difficulty": "hard",
+        "points": 20
+      }
+    ]
+  }
+}
