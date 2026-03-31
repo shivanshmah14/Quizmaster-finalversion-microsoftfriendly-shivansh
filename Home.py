@@ -4,6 +4,7 @@ import database as db
 import time
 import requests
 import json
+import os
 
 st.set_page_config(
     page_title="QuizMaster - Home",
@@ -11,8 +12,12 @@ st.set_page_config(
     layout="wide"
 )
 
-SARVAM_API_KEY = "sk_02syy9dv_Kl4BUcngJpzdwyhoYs0Tgk68"
+# ── API config ─────────────────────────────────────────────────────────────────
+# Put your key in a .env file or set it as an environment variable.
+# Falls back to the hardcoded value so the exam still works if no .env is present.
+SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "sk_02syy9dv_Kl4BUcngJpzdwyhoYs0Tgk68")
 SARVAM_CHAT_URL = "https://api.sarvam.ai/v1/chat/completions"
+
 
 def initialize_session_state():
     defaults = {
@@ -47,6 +52,7 @@ def initialize_session_state():
         if key not in st.session_state:
             st.session_state[key] = value
 
+
 def call_shiva_ai(user_message, history):
     system_prompt = (
         "You are Shiva AI, a helpful quiz assistant. "
@@ -71,12 +77,13 @@ def call_shiva_ai(user_message, history):
     except requests.exceptions.HTTPError as e:
         code = e.response.status_code if e.response else "?"
         if code == 401:
-            return "API key error - please update your Shiva AI key."
+            return "API key error - please update your Sarvam AI key."
         elif code == 429:
             return "Too many requests - wait a moment and try again."
         return f"API error ({code}). Please try again."
     except Exception as e:
         return f"Error: {str(e)}"
+
 
 def generate_quiz_from_text(text):
     headers = {
@@ -113,6 +120,7 @@ Text:
         return json.loads(raw.strip())
     except Exception:
         return []
+
 
 def extract_text_from_file(uploaded_file):
     name = uploaded_file.name.lower()
@@ -155,6 +163,7 @@ def extract_text_from_file(uploaded_file):
             return ""
     return ""
 
+
 def show_login():
     st.subheader("Login")
     with st.form("login_form"):
@@ -177,6 +186,7 @@ def show_login():
             else:
                 st.warning("Please fill in all fields")
 
+
 def show_register():
     st.subheader("Create Account")
     with st.form("register_form"):
@@ -197,12 +207,13 @@ def show_register():
                 else:
                     st.error(message)
 
+
 def show_auth_page():
     st.markdown("""
         <div style="text-align:center;padding:2rem 0;
         background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
         border-radius:10px;margin-bottom:2rem;color:white;">
-            <h1>QuizMaster</h1>
+            <h1>🎯 QuizMaster</h1>
             <p>Test Your Knowledge and Challenge Yourself!</p>
         </div>
     """, unsafe_allow_html=True)
@@ -213,9 +224,10 @@ def show_auth_page():
     with tab2:
         show_register()
 
+
 def show_file_quiz_section():
     st.markdown("---")
-    st.markdown("### Generate a Quiz from Your File")
+    st.markdown("### 🤖 Generate a Quiz from Your File")
     st.caption("Upload any file - Shiva AI will create a quiz from it!")
 
     uploaded_file = st.file_uploader(
@@ -249,7 +261,7 @@ def show_file_quiz_section():
                 st.session_state.show_file_quiz_result = False
                 st.rerun()
             else:
-                st.error("Could not generate questions. Check your Sarvam AI key.")
+                st.error("Could not generate questions. Check your Sarvam AI key or try a different file.")
 
     if st.session_state.get("file_quiz_active") and not st.session_state.get("show_file_quiz_result"):
         questions = st.session_state.file_quiz_questions
@@ -264,7 +276,7 @@ def show_file_quiz_section():
 
         q = questions[idx]
         st.markdown("---")
-        st.markdown(f"#### Shiva AI Quiz - Question {idx + 1} of {total}")
+        st.markdown(f"#### 🤖 Shiva AI Quiz — Question {idx + 1} of {total}")
         st.progress(idx / total)
         st.markdown(f"""
             <div style="padding:1.5rem;border-radius:10px;background:#f8f9fa;
@@ -292,15 +304,15 @@ def show_file_quiz_section():
                     st.write(f"{chr(65+i)}) {option}")
 
             if last == q['correct']:
-                st.success("Correct!")
+                st.success("✅ Correct!")
             else:
-                st.error(f"Wrong! Correct answer: {q['options'][q['correct']]}")
+                st.error(f"❌ Wrong! Correct answer: {q['options'][q['correct']]}")
             if q.get('explanation'):
-                st.info(q['explanation'])
+                st.info(f"💡 {q['explanation']}")
 
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
-                label = "Next Question" if idx < total - 1 else "Finish Quiz"
+                label = "Next Question ➡️" if idx < total - 1 else "Finish Quiz 🏁"
                 if st.button(label, use_container_width=True, type="primary"):
                     st.session_state.file_quiz_index += 1
                     st.session_state.file_quiz_answered = False
@@ -315,26 +327,28 @@ def show_file_quiz_section():
         score = st.session_state.file_quiz_score
         pct = (score / total * 100) if total > 0 else 0
         st.markdown("---")
-        st.markdown("#### Shiva AI Quiz - Results")
+        st.markdown("#### 🤖 Shiva AI Quiz — Results")
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Score", f"{score}/{total}")
         with col2:
             st.metric("Accuracy", f"{pct:.0f}%")
         if pct >= 80:
-            st.success("Excellent work!")
+            st.success("🌟 Excellent work!")
         elif pct >= 50:
-            st.info("Good effort! Keep studying.")
+            st.info("👍 Good effort! Keep studying.")
         else:
-            st.warning("Keep studying - you have got this!")
+            st.warning("💪 Keep studying — you've got this!")
         if st.button("Try Another File", use_container_width=True):
             st.session_state.show_file_quiz_result = False
             st.session_state.file_quiz_questions = []
             st.rerun()
 
+
 def reset_timer():
     st.session_state.timer_start = None
     st.session_state.timer_expired = False
+
 
 def show_quiz_home():
     st.markdown("""
@@ -353,33 +367,33 @@ def show_quiz_home():
 
     st.markdown("""
         <div class="main-header">
-            <h1>QuizMaster</h1>
+            <h1>🎯 QuizMaster</h1>
             <p>Test Your Knowledge and Challenge Yourself!</p>
         </div>
     """, unsafe_allow_html=True)
 
     with st.sidebar:
-        st.success(f"Logged in as: {st.session_state.username}")
+        st.success(f"✅ Logged in as: **{st.session_state.username}**")
         if st.session_state.is_admin:
-            st.info("Admin Account")
-            if st.button("Admin Panel", use_container_width=True):
+            st.info("🔑 Admin Account")
+            if st.button("⚙️ Admin Panel", use_container_width=True):
                 st.switch_page("pages/4_Admin.py")
         st.markdown("---")
-        if st.button("Logout", use_container_width=True):
+        if st.button("🚪 Logout", use_container_width=True):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
 
         st.markdown("---")
-        st.markdown("### Shiva AI")
-        st.caption("Ask anything about your quiz!")
+        st.markdown("### 🤖 Shiva AI")
+        st.caption("Ask anything about your quiz topics!")
 
         chat_container = st.container(height=260)
         with chat_container:
             if not st.session_state.shiva_messages:
                 st.markdown(
                     "<div style='color:#888;font-size:13px;font-style:italic;'>"
-                    "Hi! I am Shiva AI. Ask me anything about your quiz topics.</div>",
+                    "Hi! I'm Shiva AI. Ask me anything about your quiz topics.</div>",
                     unsafe_allow_html=True
                 )
             for msg in st.session_state.shiva_messages:
@@ -404,22 +418,24 @@ def show_quiz_home():
             st.session_state.shiva_messages.append({"role": "assistant", "content": reply})
             st.rerun()
 
-        if st.button("Clear Chat", use_container_width=True, key="clear_shiva"):
+        if st.button("🗑️ Clear Chat", use_container_width=True, key="clear_shiva"):
             st.session_state.shiva_messages = []
             st.rerun()
 
-    st.markdown("### Welcome to QuizMaster!")
+    st.markdown("### 👋 Welcome to QuizMaster!")
     st.write("An interactive learning app to test your knowledge across multiple categories.")
 
     categories_list = db.get_all_categories()
 
     if not categories_list:
-        st.warning("No quiz categories available yet.")
+        st.warning("⚠️ No quiz categories available yet.")
         if st.session_state.is_admin:
-            st.info("As an admin, you can add questions in the Admin Panel!")
+            st.info("As an admin, you can add questions in the Admin Panel.")
+        else:
+            st.info("Please ask an admin to add quiz questions.")
     else:
-        st.markdown("### Choose a Category")
-        with st.expander("Quiz Settings"):
+        st.markdown("### 📚 Choose a Category")
+        with st.expander("⚙️ Quiz Settings"):
             timer_seconds = st.slider("Seconds per question", min_value=10, max_value=120, value=30, step=5)
             st.session_state.quiz_timer_seconds = timer_seconds
 
@@ -433,7 +449,7 @@ def show_quiz_home():
                         <p>{len(questions)} questions available</p>
                     </div>
                 """, unsafe_allow_html=True)
-                if st.button(f"Start {category_name} Quiz", key=f"start_{category_name}", use_container_width=True):
+                if st.button(f"▶️ Start {category_name} Quiz", key=f"start_{category_name}", use_container_width=True):
                     st.session_state.selected_category = category_name
                     st.session_state.current_question = 0
                     st.session_state.score = 0
@@ -446,7 +462,7 @@ def show_quiz_home():
                     st.switch_page("pages/1_Quiz.py")
 
     st.markdown("---")
-    st.markdown("### Quick Stats")
+    st.markdown("### 📊 Quick Stats")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Categories", len(categories_list) if categories_list else 0)
@@ -461,7 +477,8 @@ def show_quiz_home():
     show_file_quiz_section()
 
     st.markdown("---")
-    st.markdown("<div style='text-align:center;color:#666;'><p>Good luck with your quiz!</p></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;color:#666;'><p>Good luck with your quiz! 🍀</p></div>", unsafe_allow_html=True)
+
 
 def main():
     initialize_session_state()
