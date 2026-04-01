@@ -13,8 +13,6 @@ st.set_page_config(
 )
 
 # ── API config ─────────────────────────────────────────────────────────────────
-# Put your key in a .env file or set it as an environment variable.
-# Falls back to the hardcoded value so the exam still works if no .env is present.
 SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "sk_02syy9dv_Kl4BUcngJpzdwyhoYs0Tgk68")
 SARVAM_CHAT_URL = "https://api.sarvam.ai/v1/chat/completions"
 
@@ -55,9 +53,11 @@ def initialize_session_state():
 
 def call_shiva_ai(user_message, history):
     system_prompt = (
-        "You are Shiva AI, a helpful quiz assistant. "
-        "You help students learn and understand quiz topics. "
-        "Keep answers concise, friendly, and educational."
+        "You are Shiva AI, a quiz study assistant. Follow these rules strictly:\n"
+        "1. ALWAYS respond in English only, no matter what language the user writes in.\n"
+        "2. NEVER show your thinking, reasoning, or internal monologue. Output the final answer only.\n"
+        "3. Keep responses to 1-3 sentences. Be direct and concise.\n"
+        "4. Help with quiz topics, studying, and learning only."
     )
     messages = [{"role": "system", "content": system_prompt}]
     for msg in history[-6:]:
@@ -67,11 +67,11 @@ def call_shiva_ai(user_message, history):
         "Authorization": f"Bearer {SARVAM_API_KEY}",
         "Content-Type": "application/json"
     }
-    payload = {"model": "sarvam-m", "messages": messages, "max_tokens": 300}
+    payload = {"model": "sarvam-m", "messages": messages, "max_tokens": 150}
     try:
         resp = requests.post(SARVAM_CHAT_URL, headers=headers, json=payload, timeout=15)
         resp.raise_for_status()
-        return resp.json()["choices"][0]["message"]["content"]
+        return resp.json()["choices"][0]["message"]["content"].strip()
     except requests.exceptions.Timeout:
         return "Request timed out. Please try again."
     except requests.exceptions.HTTPError as e:
@@ -90,20 +90,17 @@ def generate_quiz_from_text(text):
         "Authorization": f"Bearer {SARVAM_API_KEY}",
         "Content-Type": "application/json"
     }
-    prompt = f"""
-You are a quiz creator. Read the following text and generate exactly 5 multiple-choice quiz questions from it.
-
-Return ONLY a valid JSON array - no explanation, no markdown, no code blocks. Just the raw JSON array.
-
-Each object must have:
-- "question": string
-- "options": array of exactly 4 strings
-- "correct": integer index (0-3) of the correct option
-- "explanation": string (brief explanation of the correct answer)
-
-Text:
-{text[:3000]}
-"""
+    prompt = (
+        "You are a quiz creator. Read the text below and generate exactly 5 multiple-choice questions.\n\n"
+        "CRITICAL: Return ONLY a raw JSON array. No explanation, no markdown, no code fences.\n"
+        "Start your entire response with [ and end with ]. Nothing before or after.\n\n"
+        "Each object must have:\n"
+        "- \"question\": string\n"
+        "- \"options\": array of exactly 4 strings\n"
+        "- \"correct\": integer 0-3 (index of correct option)\n"
+        "- \"explanation\": string (one sentence)\n\n"
+        f"Text:\n{text[:3000]}"
+    )
     payload = {
         "model": "sarvam-m",
         "messages": [{"role": "user", "content": prompt}],
@@ -113,11 +110,22 @@ Text:
         resp = requests.post(SARVAM_CHAT_URL, headers=headers, json=payload, timeout=30)
         resp.raise_for_status()
         raw = resp.json()["choices"][0]["message"]["content"].strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        return json.loads(raw.strip())
+        # Strip markdown fences if the model adds them
+        if "```" in raw:
+            parts = raw.split("```")
+            for part in parts:
+                part = part.strip()
+                if part.startswith("json"):
+                    part = part[4:].strip()
+                if part.startswith("["):
+                    raw = part
+                    break
+        # Extract just the JSON array
+        start = raw.find("[")
+        end = raw.rfind("]")
+        if start != -1 and end != -1:
+            raw = raw[start:end+1]
+        return json.loads(raw)
     except Exception:
         return []
 
@@ -125,31 +133,29 @@ Text:
 def extract_text_from_file(uploaded_file):
     name = uploaded_file.name.lower()
     plain_text_extensions = (
-        ".txt", ".md",
-        ".js", ".jsx", ".ts", ".tsx",
-        ".py", ".css", ".html", ".htm",
-        ".json", ".csv", ".xml"
+        ".txt", ".md", ".js", ".jsx", ".ts", ".tsx",
+        ".py", ".css", ".html", ".htm", ".json", ".csv", ".xml"
     )
-    if any(name.endswith(ext) for ext in plain_text_extensions):
-        return uploaded_file.read().decode("utf-8", errors="ignore")
-    elif name.endswith(".pdf"):
-        try:
+    try:
+        if any(name.endswith(ext) for ext in plain_text_extensions):
+            return uploaded_file.read().decode("utf-8", errors="ignore")
+
+        elif name.endswith(".pdf"):
             from pypdf import PdfReader
             import io
             reader = PdfReader(io.BytesIO(uploaded_file.read()))
-            return "\n".join(page.extract_text() or "" for page in reader.pages)
-        except Exception:
-            return ""
-    elif name.endswith(".docx"):
-        try:
-            import docx
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+            if not text.strip():
+                st.warning("PDF appears to be scanned/image-based. Text extraction may be limited.")
+            return text
+
+        elif name.endswith(".docx"):
+            from docx import Document
             import io
-            doc = docx.Document(io.BytesIO(uploaded_file.read()))
+            doc = Document(io.BytesIO(uploaded_file.read()))
             return "\n".join(p.text for p in doc.paragraphs if p.text.strip())
-        except Exception:
-            return ""
-    elif name.endswith(".pptx"):
-        try:
+
+        elif name.endswith(".pptx"):
             from pptx import Presentation
             import io
             prs = Presentation(io.BytesIO(uploaded_file.read()))
@@ -159,9 +165,17 @@ def extract_text_from_file(uploaded_file):
                     if shape.has_text_frame:
                         texts.append(shape.text_frame.text)
             return "\n".join(texts)
-        except Exception:
+
+        else:
+            st.error(f"File type not supported: {name.split('.')[-1].upper()}")
             return ""
-    return ""
+
+    except ImportError as e:
+        st.error(f"Missing library: {e}. Run: pip install pypdf python-docx python-pptx")
+        return ""
+    except Exception as e:
+        st.error(f"Could not read file: {e}")
+        return ""
 
 
 def show_login():
@@ -228,7 +242,7 @@ def show_auth_page():
 def show_file_quiz_section():
     st.markdown("---")
     st.markdown("### 🤖 Generate a Quiz from Your File")
-    st.caption("Upload any file - Shiva AI will create a quiz from it!")
+    st.caption("Upload any file — Shiva AI will create a quiz from it!")
 
     uploaded_file = st.file_uploader(
         "Upload a file",
@@ -246,9 +260,9 @@ def show_file_quiz_section():
             st.error("Could not extract text from this file.")
             return
         word_count = len(file_text.split())
-        st.success(f"File loaded: {uploaded_file.name} ({word_count} words)")
+        st.success(f"✅ File loaded: {uploaded_file.name} ({word_count} words)")
 
-        if st.button("Generate Quiz from File", use_container_width=True, type="primary"):
+        if st.button("🤖 Generate Quiz from File", use_container_width=True, type="primary"):
             with st.spinner("Shiva AI is reading your file and creating questions..."):
                 questions = generate_quiz_from_text(file_text)
             if questions:
@@ -261,7 +275,7 @@ def show_file_quiz_section():
                 st.session_state.show_file_quiz_result = False
                 st.rerun()
             else:
-                st.error("Could not generate questions. Check your Sarvam AI key or try a different file.")
+                st.error("❌ Could not generate questions. Try a file with more text content.")
 
     if st.session_state.get("file_quiz_active") and not st.session_state.get("show_file_quiz_result"):
         questions = st.session_state.file_quiz_questions
@@ -477,7 +491,8 @@ def show_quiz_home():
     show_file_quiz_section()
 
     st.markdown("---")
-    st.markdown("<div style='text-align:center;color:#666;'><p>Good luck with your quiz! 🍀</p></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;color:#666;'><p>Good luck with your quiz! 🍀</p></div>",
+                unsafe_allow_html=True)
 
 
 def main():

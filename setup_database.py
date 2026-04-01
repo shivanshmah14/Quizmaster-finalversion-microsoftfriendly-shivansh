@@ -1,11 +1,13 @@
 import database as db
 from pathlib import Path
 
+
 def setup_database():
     print("=" * 50)
     print("QuizMaster - Database Setup")
     print("=" * 50)
 
+    db.init_database()
     print("\nDatabase tables created!")
 
     print("\nCreating admin user...")
@@ -29,17 +31,6 @@ def setup_database():
     print("Run: streamlit run Home.py")
     print("=" * 50)
 
+
 if __name__ == "__main__":
     setup_database()
-```
-
----
-
-**8. requirements.txt**
-```
-streamlit>=1.28.0
-pandas>=2.0.0
-requests>=2.28.0
-pypdf>=3.0.0
-python-pptx>=0.6.21
-python-docx>=1.1.0
