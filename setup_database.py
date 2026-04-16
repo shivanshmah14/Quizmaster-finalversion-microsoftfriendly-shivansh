@@ -11,7 +11,7 @@ def setup_database():
     print("\nDatabase tables created!")
 
     print("\nCreating admin user...")
-    success, message = db.create_user("admin", "admin123", is_admin=True)
+    success, message = db.create_user("admin", "admin123mas", is_admin=True)
     print(f"  {message}")
 
     print("\nCreating student user...")

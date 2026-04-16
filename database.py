@@ -110,6 +110,30 @@ def verify_user(username, password):
     return None
 
 
+def ensure_admin_account(username="admin", password="admin123mas"):
+    """
+    Ensure there is a default admin account with the expected credentials.
+    If the user exists, force admin privileges and update password hash.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+    row = cursor.fetchone()
+    password_hash = hash_password(password)
+    if row:
+        cursor.execute(
+            "UPDATE users SET password_hash = ?, is_admin = 1 WHERE username = ?",
+            (password_hash, username),
+        )
+    else:
+        cursor.execute(
+            "INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1)",
+            (username, password_hash),
+        )
+    conn.commit()
+    conn.close()
+
+
 def get_user_by_id(user_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -167,6 +191,27 @@ def get_all_categories():
     rows = cursor.fetchall()
     conn.close()
     return [row["category"] for row in rows]
+
+
+def get_category_creators(category):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT DISTINCT u.username
+        FROM questions q
+        LEFT JOIN users u ON q.created_by = u.id
+        WHERE q.category = ?
+        ORDER BY u.username
+    """,
+        (category,),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    creators = [row["username"] for row in rows if row["username"]]
+    if not creators:
+        return ["System"]
+    return creators
 
 
 def get_question_by_id(question_id):
@@ -354,3 +399,4 @@ def migrate_json_to_db(questions_json_path):
 
 
 init_database()
+ensure_admin_account()

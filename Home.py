@@ -45,6 +45,8 @@ def initialize_session_state():
         "file_quiz_answered": False,
         "file_quiz_last_answer": None,
         "show_file_quiz_result": False,
+        "generated_quiz_pending": [],
+        "generated_quiz_filename": "",
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -56,7 +58,7 @@ def call_shiva_ai(user_message, history):
         "You are Shiva AI, a quiz study assistant. Follow these rules strictly:\n"
         "1. ALWAYS respond in English only, no matter what language the user writes in.\n"
         "2. NEVER show your thinking, reasoning, or internal monologue. Output the final answer only.\n"
-        "3. Keep responses to 1-3 sentences. Be direct and concise.\n"
+        "3. Keep responses minimal to 1-3 sentences but answer their question. Be direct and concise.\n"
         "4. Help with quiz topics, studying, and learning only."
     )
     messages = [{"role": "system", "content": system_prompt}]
@@ -273,6 +275,8 @@ def show_file_quiz_section():
                 st.session_state.file_quiz_answered = False
                 st.session_state.file_quiz_last_answer = None
                 st.session_state.show_file_quiz_result = False
+                st.session_state.generated_quiz_pending = questions
+                st.session_state.generated_quiz_filename = uploaded_file.name
                 st.rerun()
             else:
                 st.error("❌ Could not generate questions. Try a file with more text content.")
@@ -456,11 +460,14 @@ def show_quiz_home():
         cols = st.columns(2)
         for idx, category_name in enumerate(categories_list):
             questions = db.get_questions_by_category(category_name)
+            creators = db.get_category_creators(category_name)
+            creator_label = ", ".join(creators)
             with cols[idx % 2]:
                 st.markdown(f"""
                     <div class="category-card">
                         <h4>{category_name}</h4>
                         <p>{len(questions)} questions available</p>
+                        <p><strong>By:</strong> {creator_label}</p>
                     </div>
                 """, unsafe_allow_html=True)
                 if st.button(f"▶️ Start {category_name} Quiz", key=f"start_{category_name}", use_container_width=True):
@@ -487,6 +494,36 @@ def show_quiz_home():
         user_stats = db.get_user_statistics(st.session_state.user_id)
         games_played = user_stats['total_games'] if user_stats else 0
         st.metric("Games Played", games_played)
+
+    # Save to library option
+    if st.session_state.get("generated_quiz_pending") and not st.session_state.get("file_quiz_active"):
+        pending = st.session_state.generated_quiz_pending
+        default_name = Path(st.session_state.generated_quiz_filename).stem.replace("_", " ").title()
+        st.markdown("---")
+        st.markdown("#### 💾 Save this quiz so all players can attempt it?")
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            save_name = st.text_input("Category name", value=default_name, key="save_quiz_name")
+        with col2:
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("💾 Save to Library", use_container_width=True, type="primary"):
+                for q in pending:
+                    db.add_question(
+                        category=save_name,
+                        question=q['question'],
+                        options=q['options'],
+                        correct_index=q['correct'],
+                        difficulty="medium",
+                        points=10,
+                        created_by=st.session_state.user_id
+                    )
+                st.success(f"✅ {len(pending)} questions saved under **{save_name}**! All players can now play it.")
+                st.session_state.generated_quiz_pending = None
+                st.session_state.generated_quiz_filename = None
+                st.rerun()
+            if st.button("Skip", use_container_width=True):
+                st.session_state.generated_quiz_pending = None
+                st.rerun()
 
     show_file_quiz_section()
 

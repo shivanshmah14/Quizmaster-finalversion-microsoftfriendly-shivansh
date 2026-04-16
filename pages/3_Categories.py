@@ -22,6 +22,15 @@ def load_questions():
         st.error(f"Error loading questions: {e}")
         return {}
 
+
+def get_creator_name(user_id):
+    if not user_id:
+        return "System"
+    user = db.get_user_by_id(user_id)
+    if user and user.get("username"):
+        return user["username"]
+    return "Unknown"
+
 st.markdown("""
     <style>
     .categories-header {
@@ -66,8 +75,50 @@ with col3:
 
 st.markdown("---")
 
+st.markdown("### Create a Public Quiz Question")
+st.caption("Any logged-in user can add questions. Added questions are visible and playable by everyone.")
+
+with st.form("create_public_question_form"):
+    col1, col2 = st.columns(2)
+    with col1:
+        new_category = st.text_input("Category Name")
+        new_difficulty = st.selectbox("Difficulty", ["easy", "medium", "hard"])
+    with col2:
+        points_map = {"easy": 10, "medium": 15, "hard": 20}
+        new_points = st.number_input("Points", min_value=1, max_value=100, value=points_map[new_difficulty])
+
+    new_question = st.text_area("Question", height=100)
+    st.markdown("Answer Options")
+    new_opt_a = st.text_input("Option A")
+    new_opt_b = st.text_input("Option B")
+    new_opt_c = st.text_input("Option C")
+    new_opt_d = st.text_input("Option D")
+    new_correct = st.radio("Correct Answer", ["A", "B", "C", "D"], horizontal=True)
+
+    create_submit = st.form_submit_button("Add Public Question", use_container_width=True)
+    if create_submit:
+        required = [new_category, new_question, new_opt_a, new_opt_b, new_opt_c, new_opt_d]
+        if not all(required):
+            st.error("Please fill in all fields before submitting.")
+        else:
+            db.add_question(
+                category=new_category.strip(),
+                question=new_question.strip(),
+                options=[new_opt_a.strip(), new_opt_b.strip(), new_opt_c.strip(), new_opt_d.strip()],
+                correct_index=ord(new_correct) - ord("A"),
+                difficulty=new_difficulty,
+                points=int(new_points),
+                created_by=st.session_state.get("user_id"),
+            )
+            st.success(f"Question added to '{new_category.strip()}'. Everyone can now play it.")
+            st.rerun()
+
+st.markdown("---")
+
 for category_name, questions in categories.items():
-    with st.expander(f"{category_name} ({len(questions)} questions)", expanded=False):
+    category_creators = db.get_category_creators(category_name)
+    creator_label = ", ".join(category_creators)
+    with st.expander(f"{category_name} ({len(questions)} questions) • By: {creator_label}", expanded=False):
         diff_counts = {'easy': 0, 'medium': 0, 'hard': 0}
         total_points = 0
         for q in questions:
@@ -85,12 +136,14 @@ for category_name, questions in categories.items():
             st.metric("Hard", diff_counts['hard'])
 
         st.write(f"**Total Points Available:** {total_points}")
+        st.write(f"**Created by:** {creator_label}")
         st.markdown("---")
         st.markdown("#### Questions Preview")
 
         for idx, question in enumerate(questions):
             st.markdown(f"**Question {idx + 1}**")
             st.write(question['question'])
+            st.markdown(f"**Created by:** `{get_creator_name(question.get('created_by'))}`")
             diff = question.get('difficulty', 'medium')
             st.markdown(
                 f"<span class='{diff}'>{diff.upper()}</span> "
