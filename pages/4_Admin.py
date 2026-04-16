@@ -61,7 +61,7 @@ st.markdown("""
 # --------------------------------------------------
 # TABS FOR DIFFERENT ADMIN FUNCTIONS
 # --------------------------------------------------
-tab1, tab2, tab3, tab4 = st.tabs(["➕ Add Question", "✏️ Edit Questions", "📊 Statistics", "🔄 Migrate JSON"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["➕ Add Question", "✏️ Edit Questions", "📊 Statistics", "🔄 Migrate JSON", "💬 All Messages"])
 
 # --------------------------------------------------
 # TAB 1: ADD NEW QUESTION
@@ -327,6 +327,29 @@ with tab4:
                 st.balloons()
         except Exception as e:
             st.error(f"❌ Migration failed: {e}")
+
+# --------------------------------------------------
+# TAB 5: ALL USER MESSAGES (ADMIN)
+# --------------------------------------------------
+with tab5:
+    st.header("💬 All User Messages")
+    st.caption("Admins can view all direct messages sent between users.")
+
+    all_messages = db.get_all_messages(limit=500)
+    if not all_messages:
+        st.info("No messages found yet.")
+    else:
+        st.write(f"Total messages: **{len(all_messages)}**")
+        for msg in all_messages:
+            category_label = msg["category"] if msg.get("category") else "General"
+            st.markdown(
+                f"**From:** {msg['sender_username']}  \n"
+                f"**To:** {msg['receiver_username']}  \n"
+                f"**Category:** {category_label}  \n"
+                f"**Sent:** {msg['sent_at']}"
+            )
+            st.write(msg["message"])
+            st.markdown("---")
 
 # --------------------------------------------------
 # SIDEBAR - QUICK ACTIONS

@@ -63,6 +63,20 @@ def init_database():
         )
     """
     )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender_id INTEGER NOT NULL,
+            receiver_id INTEGER NOT NULL,
+            category TEXT,
+            message TEXT NOT NULL,
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (sender_id) REFERENCES users(id),
+            FOREIGN KEY (receiver_id) REFERENCES users(id)
+        )
+    """
+    )
     conn.commit()
     conn.close()
 
@@ -141,6 +155,27 @@ def get_user_by_id(user_id):
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
+
+
+def get_user_by_username(username):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+def get_all_usernames(exclude_user_id=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+    if exclude_user_id:
+        cursor.execute("SELECT username FROM users WHERE id != ? ORDER BY username", (exclude_user_id,))
+    else:
+        cursor.execute("SELECT username FROM users ORDER BY username")
+    rows = cursor.fetchall()
+    conn.close()
+    return [row["username"] for row in rows]
 
 
 def add_question(
@@ -373,6 +408,73 @@ def get_user_statistics(user_id):
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
+
+
+def send_message(sender_id, receiver_id, message, category=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        INSERT INTO messages (sender_id, receiver_id, category, message)
+        VALUES (?, ?, ?, ?)
+    """,
+        (sender_id, receiver_id, category, message),
+    )
+    conn.commit()
+    message_id = cursor.lastrowid
+    conn.close()
+    return message_id
+
+
+def get_messages_for_user(user_id, limit=50):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT
+            m.id,
+            m.category,
+            m.message,
+            m.sent_at,
+            sender.username AS sender_username,
+            receiver.username AS receiver_username
+        FROM messages m
+        JOIN users sender ON m.sender_id = sender.id
+        JOIN users receiver ON m.receiver_id = receiver.id
+        WHERE m.receiver_id = ?
+        ORDER BY m.sent_at DESC
+        LIMIT ?
+    """,
+        (user_id, limit),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def get_all_messages(limit=200):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT
+            m.id,
+            m.category,
+            m.message,
+            m.sent_at,
+            sender.username AS sender_username,
+            receiver.username AS receiver_username
+        FROM messages m
+        JOIN users sender ON m.sender_id = sender.id
+        JOIN users receiver ON m.receiver_id = receiver.id
+        ORDER BY m.sent_at DESC
+        LIMIT ?
+    """,
+        (limit,),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
 
 
 def migrate_json_to_db(questions_json_path):

@@ -115,6 +115,51 @@ with st.form("create_public_question_form"):
 
 st.markdown("---")
 
+st.markdown("### Send Message to Any User")
+all_targets = db.get_all_usernames(exclude_user_id=st.session_state.get("user_id"))
+if all_targets:
+    with st.form("dm_any_user_form"):
+        dm_any_target = st.selectbox("Select user", all_targets)
+        dm_any_category = st.text_input("Category (optional)", placeholder="e.g. Science")
+        dm_any_text = st.text_area("Message", placeholder="Hey! Nice quiz.")
+        dm_any_submit = st.form_submit_button("Send DM", use_container_width=True)
+        if dm_any_submit:
+            if not dm_any_text.strip():
+                st.error("Please type a message first.")
+            else:
+                receiver = db.get_user_by_username(dm_any_target)
+                sender_id = st.session_state.get("user_id")
+                if receiver and sender_id:
+                    db.send_message(
+                        sender_id=sender_id,
+                        receiver_id=receiver["id"],
+                        message=dm_any_text.strip(),
+                        category=dm_any_category.strip() or None,
+                    )
+                    st.success(f"Message sent to {dm_any_target}.")
+                    st.rerun()
+                else:
+                    st.error("Could not send message to this user.")
+else:
+    st.caption("No other users found yet. Ask someone to create an account first.")
+
+st.markdown("---")
+
+st.markdown("### My Messages")
+my_messages = db.get_messages_for_user(st.session_state.get("user_id"), limit=20)
+if my_messages:
+    for msg in my_messages:
+        category_label = msg["category"] if msg.get("category") else "General"
+        st.info(
+            f"From **{msg['sender_username']}** about **{category_label}**\n\n"
+            f"{msg['message']}\n\n"
+            f"_Sent: {msg['sent_at']}_"
+        )
+else:
+    st.caption("No messages yet.")
+
+st.markdown("---")
+
 for category_name, questions in categories.items():
     category_creators = db.get_category_creators(category_name)
     creator_label = ", ".join(category_creators)
@@ -137,6 +182,41 @@ for category_name, questions in categories.items():
 
         st.write(f"**Total Points Available:** {total_points}")
         st.write(f"**Created by:** {creator_label}")
+        st.markdown("---")
+        st.markdown("#### Message the Quiz Creator")
+        dm_targets = [
+            username for username in category_creators
+            if username not in {"System", st.session_state.get("username")}
+        ]
+        if dm_targets:
+            target = st.selectbox(
+                "Select creator",
+                dm_targets,
+                key=f"dm_target_{category_name}",
+            )
+            dm_text = st.text_area(
+                "Message",
+                placeholder="Great quiz! I loved it.",
+                key=f"dm_text_{category_name}",
+            )
+            if st.button("Send Message", key=f"dm_send_{category_name}", use_container_width=True):
+                if not dm_text.strip():
+                    st.error("Please type a message first.")
+                else:
+                    receiver = db.get_user_by_username(target)
+                    sender_id = st.session_state.get("user_id")
+                    if receiver and sender_id:
+                        db.send_message(
+                            sender_id=sender_id,
+                            receiver_id=receiver["id"],
+                            message=dm_text.strip(),
+                            category=category_name,
+                        )
+                        st.success(f"Message sent to {target}.")
+                    else:
+                        st.error("Could not send message to this user.")
+        else:
+            st.caption("No creator account available to message for this category.")
         st.markdown("---")
         st.markdown("#### Questions Preview")
 
