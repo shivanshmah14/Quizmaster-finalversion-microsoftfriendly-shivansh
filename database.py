@@ -9,6 +9,7 @@ import hashlib
 import json
 
 DATABASE_PATH = Path(__file__).parent / "data" / "quizmaster.db"
+QUESTIONS_JSON_PATH = Path(__file__).parent / "data" / "questions.json"
 DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 
@@ -16,6 +17,41 @@ def get_connection():
     conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def _export_questions_to_json():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT id, category, question, options, correct_index, difficulty, points
+        FROM questions
+        ORDER BY category, id
+    """
+    )
+    rows = cursor.fetchall()
+    conn.close()
+
+    categories = {}
+    per_category_index = {}
+    for row in rows:
+        category = row["category"]
+        per_category_index[category] = per_category_index.get(category, 0) + 1
+        categories.setdefault(category, []).append(
+            {
+                "id": per_category_index[category],
+                "question": row["question"],
+                "options": json.loads(row["options"]),
+                "correct": row["correct_index"],
+                "difficulty": row["difficulty"] or "medium",
+                "points": row["points"] if row["points"] is not None else 10,
+            }
+        )
+
+    payload = {"categories": categories}
+    QUESTIONS_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(QUESTIONS_JSON_PATH, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
 def init_database():
@@ -237,6 +273,7 @@ def add_question(
     question_id = cursor.lastrowid
     conn.commit()
     conn.close()
+    _export_questions_to_json()
     return question_id
 
 
@@ -344,6 +381,8 @@ def update_question(
     conn.commit()
     success = cursor.rowcount > 0
     conn.close()
+    if success:
+        _export_questions_to_json()
     return success
 
 
@@ -354,6 +393,8 @@ def delete_question(question_id):
     conn.commit()
     success = cursor.rowcount > 0
     conn.close()
+    if success:
+        _export_questions_to_json()
     return success
 
 
@@ -545,3 +586,12 @@ def migrate_json_to_db(questions_json_path):
 
 init_database()
 ensure_admin_account()
+
+conn = get_connection()
+cursor = conn.cursor()
+cursor.execute("SELECT COUNT(*) AS count FROM questions")
+question_count = cursor.fetchone()["count"]
+conn.close()
+
+if question_count == 0 and QUESTIONS_JSON_PATH.exists():
+    migrate_json_to_db(QUESTIONS_JSON_PATH)
