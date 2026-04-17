@@ -1,61 +1,384 @@
 {
   "categories": {
-    "Mathematics": [
+    "General Knowledge": [
       {
         "id": 1,
-        "question": "What is 7 × 8?",
-        "options": ["54", "56", "58", "64"],
-        "correct": 1,
+        "question": "What is the capital of France?",
+        "options": [
+          "London",
+          "Berlin",
+          "Paris",
+          "Madrid"
+        ],
+        "correct": 2,
         "difficulty": "easy",
         "points": 10
       },
       {
         "id": 2,
-        "question": "What is the square root of 144?",
-        "options": ["10", "11", "12", "13"],
-        "correct": 2,
+        "question": "Which planet is known as the Red Planet?",
+        "options": [
+          "Venus",
+          "Mars",
+          "Jupiter",
+          "Saturn"
+        ],
+        "correct": 1,
         "difficulty": "easy",
         "points": 10
       },
       {
         "id": 3,
-        "question": "What is 15% of 200?",
-        "options": ["25", "30", "35", "40"],
-        "correct": 1,
-        "difficulty": "medium",
-        "points": 15
-      },
-      {
-        "id": 4,
-        "question": "What is the value of π (pi) rounded to two decimal places?",
-        "options": ["3.12", "3.14", "3.16", "3.18"],
-        "correct": 1,
-        "difficulty": "easy",
-        "points": 10
-      },
-      {
-        "id": 5,
-        "question": "If x + 5 = 12, what is x?",
-        "options": ["5", "6", "7", "8"],
+        "question": "How many continents are there?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
         "correct": 2,
         "difficulty": "easy",
         "points": 10
       },
       {
+        "id": 4,
+        "question": "What is the largest ocean on Earth?",
+        "options": [
+          "Atlantic Ocean",
+          "Indian Ocean",
+          "Arctic Ocean",
+          "Pacific Ocean"
+        ],
+        "correct": 3,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 5,
+        "question": "Who painted the Mona Lisa?",
+        "options": [
+          "Vincent van Gogh",
+          "Pablo Picasso",
+          "Leonardo da Vinci",
+          "Michelangelo"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
         "id": 6,
-        "question": "What is 2³ (2 to the power of 3)?",
-        "options": ["6", "8", "9", "12"],
+        "question": "What is the smallest country in the world?",
+        "options": [
+          "Monaco",
+          "Vatican City",
+          "San Marino",
+          "Liechtenstein"
+        ],
         "correct": 1,
         "difficulty": "medium",
         "points": 15
       },
       {
         "id": 7,
-        "question": "What is the area of a circle with radius 5? (Use π ≈ 3.14)",
-        "options": ["78.5", "31.4", "15.7", "62.8"],
-        "correct": 0,
+        "question": "In what year did World War II end?",
+        "options": [
+          "1943",
+          "1944",
+          "1945",
+          "1946"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 8,
+        "question": "What is the longest river in the world?",
+        "options": [
+          "Amazon River",
+          "Nile River",
+          "Yangtze River",
+          "Mississippi River"
+        ],
+        "correct": 1,
         "difficulty": "hard",
         "points": 20
+      },
+      {
+        "id": 9,
+        "question": "What is the capital of France?",
+        "options": [
+          "London",
+          "Berlin",
+          "Paris",
+          "Madrid"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 10,
+        "question": "Which planet is known as the Red Planet?",
+        "options": [
+          "Venus",
+          "Mars",
+          "Jupiter",
+          "Saturn"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 11,
+        "question": "How many continents are there?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 12,
+        "question": "What is the largest ocean on Earth?",
+        "options": [
+          "Atlantic Ocean",
+          "Indian Ocean",
+          "Arctic Ocean",
+          "Pacific Ocean"
+        ],
+        "correct": 3,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 13,
+        "question": "Who painted the Mona Lisa?",
+        "options": [
+          "Vincent van Gogh",
+          "Pablo Picasso",
+          "Leonardo da Vinci",
+          "Michelangelo"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 14,
+        "question": "What is the smallest country in the world?",
+        "options": [
+          "Monaco",
+          "Vatican City",
+          "San Marino",
+          "Liechtenstein"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 15,
+        "question": "In what year did World War II end?",
+        "options": [
+          "1943",
+          "1944",
+          "1945",
+          "1946"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 16,
+        "question": "What is the longest river in the world?",
+        "options": [
+          "Amazon River",
+          "Nile River",
+          "Yangtze River",
+          "Mississippi River"
+        ],
+        "correct": 1,
+        "difficulty": "hard",
+        "points": 20
+      },
+      {
+        "id": 17,
+        "question": "What is the capital of France?",
+        "options": [
+          "London",
+          "Berlin",
+          "Paris",
+          "Madrid"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 18,
+        "question": "Which planet is known as the Red Planet?",
+        "options": [
+          "Venus",
+          "Mars",
+          "Jupiter",
+          "Saturn"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 19,
+        "question": "How many continents are there?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 20,
+        "question": "What is the largest ocean on Earth?",
+        "options": [
+          "Atlantic Ocean",
+          "Indian Ocean",
+          "Arctic Ocean",
+          "Pacific Ocean"
+        ],
+        "correct": 3,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 21,
+        "question": "Who painted the Mona Lisa?",
+        "options": [
+          "Vincent van Gogh",
+          "Pablo Picasso",
+          "Leonardo da Vinci",
+          "Michelangelo"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 22,
+        "question": "What is the smallest country in the world?",
+        "options": [
+          "Monaco",
+          "Vatican City",
+          "San Marino",
+          "Liechtenstein"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 23,
+        "question": "In what year did World War II end?",
+        "options": [
+          "1943",
+          "1944",
+          "1945",
+          "1946"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 24,
+        "question": "What is the longest river in the world?",
+        "options": [
+          "Amazon River",
+          "Nile River",
+          "Yangtze River",
+          "Mississippi River"
+        ],
+        "correct": 1,
+        "difficulty": "hard",
+        "points": 20
+      }
+    ],
+    "Harmonic Oscillator Study Guide  quiz": [
+      {
+        "id": 1,
+        "question": "In simple harmonic motion (SHM), where is the kinetic energy (KE) maximum?",
+        "options": [
+          "At x = +A",
+          "At x = -A",
+          "At x = 0",
+          "At x = A/2"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 2,
+        "question": "What factors determine the period of a mass-spring system?",
+        "options": [
+          "Mass and amplitude",
+          "Spring constant and mass",
+          "Amplitude and frequency",
+          "Length and mass"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 3,
+        "question": "Why does a pendulum in a free-falling elevator not oscillate?",
+        "options": [
+          "Gravity becomes zero",
+          "Effective gravity equals g",
+          "Period becomes infinite",
+          "Amplitude increases"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 4,
+        "question": "Which SHM equation applies if an object starts at maximum displacement with zero velocity?",
+        "options": [
+          "x = A sin(ωt)",
+          "x = A cos(ωt)",
+          "x = A sin(ωt + π/2)",
+          "x = A cos(ωt + π/2)"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 5,
+        "question": "Where is the total mechanical energy in SHM the same at all times?",
+        "options": [
+          "At x = 0",
+          "At x = ±A",
+          "At x = A/2",
+          "Everywhere"
+        ],
+        "correct": 3,
+        "difficulty": "medium",
+        "points": 10
       }
     ],
     "ICT": [
@@ -75,7 +398,12 @@
       {
         "id": 2,
         "question": "Which programming language is known for data science and AI?",
-        "options": ["Java", "Python", "C++", "Ruby"],
+        "options": [
+          "Java",
+          "Python",
+          "C++",
+          "Ruby"
+        ],
         "correct": 1,
         "difficulty": "easy",
         "points": 10
@@ -96,7 +424,12 @@
       {
         "id": 4,
         "question": "What is the binary representation of the decimal number 10?",
-        "options": ["1010", "1100", "1001", "1110"],
+        "options": [
+          "1010",
+          "1100",
+          "1001",
+          "1110"
+        ],
         "correct": 0,
         "difficulty": "medium",
         "points": 15
@@ -104,7 +437,12 @@
       {
         "id": 5,
         "question": "Which data structure uses LIFO (Last In First Out)?",
-        "options": ["Queue", "Stack", "Array", "Linked List"],
+        "options": [
+          "Queue",
+          "Stack",
+          "Array",
+          "Linked List"
+        ],
         "correct": 1,
         "difficulty": "medium",
         "points": 15
@@ -125,74 +463,604 @@
       {
         "id": 7,
         "question": "What is the time complexity of binary search?",
-        "options": ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+        "options": [
+          "O(n)",
+          "O(log n)",
+          "O(n²)",
+          "O(1)"
+        ],
+        "correct": 1,
+        "difficulty": "hard",
+        "points": 20
+      },
+      {
+        "id": 8,
+        "question": "What does HTML stand for?",
+        "options": [
+          "Hyper Text Markup Language",
+          "High Tech Modern Language",
+          "Home Tool Markup Language",
+          "Hyperlinks and Text Markup Language"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 9,
+        "question": "Which programming language is known for data science and AI?",
+        "options": [
+          "Java",
+          "Python",
+          "C++",
+          "Ruby"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 10,
+        "question": "What does CPU stand for?",
+        "options": [
+          "Central Processing Unit",
+          "Computer Personal Unit",
+          "Central Processor Use",
+          "Computer Processing Unit"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 11,
+        "question": "What is the binary representation of the decimal number 10?",
+        "options": [
+          "1010",
+          "1100",
+          "1001",
+          "1110"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 12,
+        "question": "Which data structure uses LIFO (Last In First Out)?",
+        "options": [
+          "Queue",
+          "Stack",
+          "Array",
+          "Linked List"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 13,
+        "question": "What does SQL stand for?",
+        "options": [
+          "Structured Query Language",
+          "Simple Question Language",
+          "Sequential Query Language",
+          "Standard Question Language"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 14,
+        "question": "What is the time complexity of binary search?",
+        "options": [
+          "O(n)",
+          "O(log n)",
+          "O(n²)",
+          "O(1)"
+        ],
+        "correct": 1,
+        "difficulty": "hard",
+        "points": 20
+      },
+      {
+        "id": 15,
+        "question": "What does HTML stand for?",
+        "options": [
+          "Hyper Text Markup Language",
+          "High Tech Modern Language",
+          "Home Tool Markup Language",
+          "Hyperlinks and Text Markup Language"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 16,
+        "question": "Which programming language is known for data science and AI?",
+        "options": [
+          "Java",
+          "Python",
+          "C++",
+          "Ruby"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 17,
+        "question": "What does CPU stand for?",
+        "options": [
+          "Central Processing Unit",
+          "Computer Personal Unit",
+          "Central Processor Use",
+          "Computer Processing Unit"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 18,
+        "question": "What is the binary representation of the decimal number 10?",
+        "options": [
+          "1010",
+          "1100",
+          "1001",
+          "1110"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 19,
+        "question": "Which data structure uses LIFO (Last In First Out)?",
+        "options": [
+          "Queue",
+          "Stack",
+          "Array",
+          "Linked List"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 20,
+        "question": "What does SQL stand for?",
+        "options": [
+          "Structured Query Language",
+          "Simple Question Language",
+          "Sequential Query Language",
+          "Standard Question Language"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 21,
+        "question": "What is the time complexity of binary search?",
+        "options": [
+          "O(n)",
+          "O(log n)",
+          "O(n²)",
+          "O(1)"
+        ],
         "correct": 1,
         "difficulty": "hard",
         "points": 20
       }
     ],
-    "General Knowledge": [
+    "Infoblatt Monsun quiz for geo 2 Btest": [
       {
         "id": 1,
-        "question": "What is the capital of France?",
-        "options": ["London", "Berlin", "Paris", "Madrid"],
-        "correct": 2,
-        "difficulty": "easy",
+        "question": "What is the primary cause of the summer monsoon in the Indian subcontinent?",
+        "options": [
+          "Ocean currents",
+          "Land heating creating a low-pressure system",
+          "High pressure in the Tibetan Plateau",
+          "Deforestation"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
         "points": 10
       },
       {
         "id": 2,
-        "question": "Which planet is known as the Red Planet?",
-        "options": ["Venus", "Mars", "Jupiter", "Saturn"],
+        "question": "Where is the highest average annual rainfall due to the monsoon recorded?",
+        "options": [
+          "Cherrapunji",
+          "Himalayas",
+          "Western Ghats",
+          "Tibetan Plateau"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 3,
+        "question": "What characterizes the winter monsoon in the region?",
+        "options": [
+          "Southwest winds",
+          "Thermal low-pressure system",
+          "Dry air masses from Central Asia",
+          "All of the above"
+        ],
+        "correct": 2,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 4,
+        "question": "How does deforestation in the region exacerbate flooding?",
+        "options": [
+          "Increases soil erosion",
+          "Reduces rainfall intensity",
+          "Blocks wind patterns",
+          "None"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 5,
+        "question": "What type of atmospheric circulation is the monsoon considered a part of?",
+        "options": [
+          "Passat circulation",
+          "Jet stream",
+          "Trade winds",
+          "None"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 10
+      }
+    ],
+    "Into the wild flash cards": [
+      {
+        "id": 1,
+        "question": "What is the main event in chapter 17 of *Into the Wild*?",
+        "options": [
+          "Chris meets a hunter named Roland Huntley",
+          "Chris finds a new job in the city",
+          "Chris discovers a new survival technique",
+          "Chris decides to return home"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 2,
+        "question": "Why does Chris refuse to leave the wilderness?",
+        "options": [
+          "He wants to find a job",
+          "Desire for solitude and fear of authority",
+          "He lacks transportation",
+          "He is waiting for a friend"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 3,
+        "question": "What illness does Chris suffer from?",
+        "options": [
+          "Scurvy",
+          "Malaria",
+          "Frostbite",
+          "Depression"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 4,
+        "question": "Who discovers Chris's body?",
+        "options": [
+          "Billie McCann and Jim Gallien",
+          "His family",
+          "Local police",
+          "Jon Krakauer"
+        ],
+        "correct": 0,
+        "difficulty": "medium",
+        "points": 10
+      },
+      {
+        "id": 5,
+        "question": "What is the outcome of Chris's journey?",
+        "options": [
+          "He survives and returns home",
+          "He dies tragically",
+          "He becomes famous",
+          "He adapts to modern society"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 10
+      }
+    ],
+    "Mathematics": [
+      {
+        "id": 1,
+        "question": "What is 7 × 8?",
+        "options": [
+          "54",
+          "56",
+          "58",
+          "64"
+        ],
         "correct": 1,
         "difficulty": "easy",
         "points": 10
       },
       {
-        "id": 3,
-        "question": "How many continents are there?",
-        "options": ["5", "6", "7", "8"],
+        "id": 2,
+        "question": "What is the square root of 144?",
+        "options": [
+          "10",
+          "11",
+          "12",
+          "13"
+        ],
         "correct": 2,
         "difficulty": "easy",
         "points": 10
       },
       {
+        "id": 3,
+        "question": "What is 15% of 200?",
+        "options": [
+          "25",
+          "30",
+          "35",
+          "40"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
         "id": 4,
-        "question": "What is the largest ocean on Earth?",
-        "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-        "correct": 3,
+        "question": "What is the value of π (pi) rounded to two decimal places?",
+        "options": [
+          "3.12",
+          "3.14",
+          "3.16",
+          "3.18"
+        ],
+        "correct": 1,
         "difficulty": "easy",
         "points": 10
       },
       {
         "id": 5,
-        "question": "Who painted the Mona Lisa?",
-        "options": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+        "question": "If x + 5 = 12, what is x?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
         "correct": 2,
-        "difficulty": "medium",
-        "points": 15
+        "difficulty": "easy",
+        "points": 10
       },
       {
         "id": 6,
-        "question": "What is the smallest country in the world?",
-        "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+        "question": "What is 2³ (2 to the power of 3)?",
+        "options": [
+          "6",
+          "8",
+          "9",
+          "12"
+        ],
         "correct": 1,
         "difficulty": "medium",
         "points": 15
       },
       {
         "id": 7,
-        "question": "In what year did World War II end?",
-        "options": ["1943", "1944", "1945", "1946"],
+        "question": "What is the area of a circle with radius 5? (Use π ≈ 3.14)",
+        "options": [
+          "78.5",
+          "31.4",
+          "15.7",
+          "62.8"
+        ],
+        "correct": 0,
+        "difficulty": "hard",
+        "points": 20
+      },
+      {
+        "id": 8,
+        "question": "What is 7 × 8?",
+        "options": [
+          "54",
+          "56",
+          "58",
+          "64"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 9,
+        "question": "What is the square root of 144?",
+        "options": [
+          "10",
+          "11",
+          "12",
+          "13"
+        ],
         "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 10,
+        "question": "What is 15% of 200?",
+        "options": [
+          "25",
+          "30",
+          "35",
+          "40"
+        ],
+        "correct": 1,
         "difficulty": "medium",
         "points": 15
       },
       {
-        "id": 8,
-        "question": "What is the longest river in the world?",
-        "options": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+        "id": 11,
+        "question": "What is the value of π (pi) rounded to two decimal places?",
+        "options": [
+          "3.12",
+          "3.14",
+          "3.16",
+          "3.18"
+        ],
         "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 12,
+        "question": "If x + 5 = 12, what is x?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 13,
+        "question": "What is 2³ (2 to the power of 3)?",
+        "options": [
+          "6",
+          "8",
+          "9",
+          "12"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 14,
+        "question": "What is the area of a circle with radius 5? (Use π ≈ 3.14)",
+        "options": [
+          "78.5",
+          "31.4",
+          "15.7",
+          "62.8"
+        ],
+        "correct": 0,
+        "difficulty": "hard",
+        "points": 20
+      },
+      {
+        "id": 15,
+        "question": "What is 7 × 8?",
+        "options": [
+          "54",
+          "56",
+          "58",
+          "64"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 16,
+        "question": "What is the square root of 144?",
+        "options": [
+          "10",
+          "11",
+          "12",
+          "13"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 17,
+        "question": "What is 15% of 200?",
+        "options": [
+          "25",
+          "30",
+          "35",
+          "40"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 18,
+        "question": "What is the value of π (pi) rounded to two decimal places?",
+        "options": [
+          "3.12",
+          "3.14",
+          "3.16",
+          "3.18"
+        ],
+        "correct": 1,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 19,
+        "question": "If x + 5 = 12, what is x?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correct": 2,
+        "difficulty": "easy",
+        "points": 10
+      },
+      {
+        "id": 20,
+        "question": "What is 2³ (2 to the power of 3)?",
+        "options": [
+          "6",
+          "8",
+          "9",
+          "12"
+        ],
+        "correct": 1,
+        "difficulty": "medium",
+        "points": 15
+      },
+      {
+        "id": 21,
+        "question": "What is the area of a circle with radius 5? (Use π ≈ 3.14)",
+        "options": [
+          "78.5",
+          "31.4",
+          "15.7",
+          "62.8"
+        ],
+        "correct": 0,
         "difficulty": "hard",
         "points": 20
       }
