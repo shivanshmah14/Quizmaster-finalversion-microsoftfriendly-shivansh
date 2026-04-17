@@ -178,6 +178,49 @@ def get_all_usernames(exclude_user_id=None):
     return [row["username"] for row in rows]
 
 
+def get_all_users_with_activity():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT
+            u.id,
+            u.username,
+            u.is_admin,
+            u.created_at,
+            COALESCE(s.quizzes_taken, 0) AS quizzes_taken,
+            MAX(
+                COALESCE(s.last_score_at, u.created_at),
+                COALESCE(m.last_message_at, u.created_at)
+            ) AS last_online
+        FROM users u
+        LEFT JOIN (
+            SELECT
+                user_id,
+                COUNT(*) AS quizzes_taken,
+                MAX(played_at) AS last_score_at
+            FROM scores
+            GROUP BY user_id
+        ) s ON s.user_id = u.id
+        LEFT JOIN (
+            SELECT
+                user_id,
+                MAX(activity_at) AS last_message_at
+            FROM (
+                SELECT sender_id AS user_id, sent_at AS activity_at FROM messages
+                UNION ALL
+                SELECT receiver_id AS user_id, sent_at AS activity_at FROM messages
+            )
+            GROUP BY user_id
+        ) m ON m.user_id = u.id
+        ORDER BY u.created_at DESC, u.username ASC
+    """
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
 def add_question(
     category, question, options, correct_index, difficulty="medium", points=10, created_by=None
 ):
