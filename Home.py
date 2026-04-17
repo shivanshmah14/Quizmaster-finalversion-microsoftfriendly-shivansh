@@ -5,6 +5,7 @@ import time
 import requests
 import json
 import os
+import re
 
 st.set_page_config(
     page_title="QuizMaster - Home",
@@ -57,9 +58,11 @@ def call_shiva_ai(user_message, history):
     system_prompt = (
         "You are Shiva AI, a quiz study assistant. Follow these rules strictly:\n"
         "1. ALWAYS respond in English only, no matter what language the user writes in.\n"
-        "2. NEVER show your thinking, reasoning, or internal monologue. Output the final answer only.\n"
-        "3. Keep responses minimal to 1-3 sentences but answer their question. Be direct and concise.\n"
-        "4. Help with quiz topics, studying, and learning only."
+        "2. NEVER show your thinking, reasoning, steps, analysis, or internal monologue.\n"
+        "3. Output ONLY the final answer text. Do not include prefaces like 'I think', "
+        "'you asked', 'here is', 'let me explain', or 'based on'.\n"
+        "4. Keep responses minimal to 1-2 short sentences and be direct.\n"
+        "5. Help with quiz topics, studying, and learning only."
     )
     messages = [{"role": "system", "content": system_prompt}]
     for msg in history[-6:]:
@@ -73,7 +76,9 @@ def call_shiva_ai(user_message, history):
     try:
         resp = requests.post(SARVAM_CHAT_URL, headers=headers, json=payload, timeout=15)
         resp.raise_for_status()
-        return resp.json()["choices"][0]["message"]["content"].strip()
+        raw = resp.json()["choices"][0]["message"]["content"].strip()
+        cleaned = _sanitize_shiva_reply(raw)
+        return cleaned if cleaned else "Please ask a quiz or study question."
     except requests.exceptions.Timeout:
         return "Request timed out. Please try again."
     except requests.exceptions.HTTPError as e:
@@ -85,6 +90,47 @@ def call_shiva_ai(user_message, history):
         return f"API error ({code}). Please try again."
     except Exception as e:
         return f"Error: {str(e)}"
+
+
+def _sanitize_shiva_reply(text):
+    if not text:
+        return ""
+
+    out = text.strip()
+    # Remove common meta-preface phrases the model sometimes adds.
+    out = re.sub(
+        r"(?im)^(you asked.*?|i think.*?|i believe.*?|let me.*?|here(?:'s| is).*?|based on.*?|my reasoning.*?|analysis:)\s*[:\-]?\s*",
+        "",
+        out,
+    ).strip()
+
+    # Keep only non-meta lines.
+    meta_starts = (
+        "you asked",
+        "i think",
+        "i believe",
+        "my reasoning",
+        "analysis",
+        "step ",
+        "first,",
+        "let me",
+        "as an ai",
+        "chain of thought",
+    )
+    kept = []
+    for line in out.splitlines():
+        s = line.strip()
+        if not s:
+            continue
+        if s.lower().startswith(meta_starts):
+            continue
+        kept.append(s)
+
+    out = " ".join(kept).strip() if kept else out
+    # Hard cap to keep replies short and direct.
+    if len(out) > 280:
+        out = out[:280].rstrip() + "..."
+    return out
 
 
 def generate_quiz_from_text(text):
