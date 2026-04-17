@@ -457,11 +457,45 @@ def show_quiz_home():
             timer_seconds = st.slider("Seconds per question", min_value=10, max_value=120, value=30, step=5)
             st.session_state.quiz_timer_seconds = timer_seconds
 
-        cols = st.columns(2)
-        for idx, category_name in enumerate(categories_list):
+        category_data = []
+        for category_name in categories_list:
             questions = db.get_questions_by_category(category_name)
             creators = db.get_category_creators(category_name)
             creator_label = ", ".join(creators)
+            category_data.append(
+                {
+                    "name": category_name,
+                    "questions": questions,
+                    "creator_label": creator_label,
+                }
+            )
+
+        search_query = st.text_input(
+            "Search quizzes",
+            placeholder="Search by category name or creator",
+            key="quiz_category_search",
+        ).strip().lower()
+
+        if search_query:
+            filtered_categories = [
+                item for item in category_data
+                if search_query in item["name"].lower()
+                or search_query in item["creator_label"].lower()
+            ]
+        else:
+            filtered_categories = category_data
+
+        if search_query:
+            st.caption(f"Showing {len(filtered_categories)} of {len(category_data)} quizzes")
+
+        if not filtered_categories:
+            st.info("No quizzes matched your search. Try another keyword.")
+
+        cols = st.columns(2)
+        for idx, category_item in enumerate(filtered_categories):
+            category_name = category_item["name"]
+            questions = category_item["questions"]
+            creator_label = category_item["creator_label"]
             with cols[idx % 2]:
                 st.markdown(f"""
                     <div class="category-card">
