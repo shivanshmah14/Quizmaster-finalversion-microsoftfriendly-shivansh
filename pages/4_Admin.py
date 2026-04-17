@@ -61,7 +61,7 @@ st.markdown("""
 # --------------------------------------------------
 # TABS FOR DIFFERENT ADMIN FUNCTIONS
 # --------------------------------------------------
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["➕ Add Question", "✏️ Edit Questions", "📊 Statistics", "🔄 Migrate JSON", "💬 All Messages"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["➕ Add Question", "✏️ Edit Questions", "📊 Statistics", "🔄 Migrate JSON", "💬 All Messages", "💼 All Users"])
 
 # --------------------------------------------------
 # TAB 1: ADD NEW QUESTION
@@ -350,6 +350,24 @@ with tab5:
             )
             st.write(msg["message"])
             st.markdown("---")
+
+# --------------------------------------------------
+# TAB 6: VIEW ALL USERS
+# --------------------------------------------------
+with tab6:
+    st.header("💼 All Users")
+
+    users = db.get_all_users_with_activity()
+
+    if users:
+        for user in users:
+            with st.expander(f"{user['username']} ({'Admin' if user['is_admin'] else 'User'})"):
+                st.write(f"**User ID:** {user['id']}")
+                st.write(f"**Created At:** {user['created_at']}")
+                st.write(f"**Last Online:** {user['last_online'] or 'Never'}")
+                st.write(f"**Quizzes Taken:** {user['quizzes_taken']}")
+    else:
+        st.info("No users found.")
 
 # --------------------------------------------------
 # SIDEBAR - QUICK ACTIONS

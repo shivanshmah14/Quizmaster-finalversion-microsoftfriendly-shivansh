@@ -37,11 +37,6 @@ wheels/
 .DS_Store
 Thumbs.db
 
-# Database (Phase 2)
-*.db
-*.sqlite
-*.sqlite3
-
 # Logs
 *.log
 
