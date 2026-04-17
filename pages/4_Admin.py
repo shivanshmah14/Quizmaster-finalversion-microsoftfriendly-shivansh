@@ -61,7 +61,7 @@ st.markdown("""
 # --------------------------------------------------
 # TABS FOR DIFFERENT ADMIN FUNCTIONS
 # --------------------------------------------------
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["➕ Add Question", "✏️ Edit Questions", "📊 Statistics", "🔄 Migrate JSON", "💬 All Messages", "💼 All Users"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["➕ Add Question", "✏️ Edit Questions", "📊 Statistics", "🔄 Migrate JSON", "💬 All Messages", "💼 All Users"])
 
 # --------------------------------------------------
 # TAB 1: ADD NEW QUESTION
